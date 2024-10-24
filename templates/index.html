@@ -1,1 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Model Tester</title>
+  <style>
+    /* 应用统一的盒模型 */
+    * {
+      box-sizing: border-box;
+    }
 
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f0f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 500px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #666;
+    }
+
+    textarea, select, input {
+      width: 100%;  /* 确保所有元素占满容器宽度 */
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      resize: vertical;
+    }
+
+    textarea {
+      min-height: 80px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    select {
+      height: 40px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      color: #333;
+      min-height: 40px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>AI Model Tester</h2>
+
+    <div class="form-group">
+      <label for="dataset">Select Dataset:</label>
+      <select id="dataset" onchange="loadModels()">
+        <option value="">-- Select Dataset --</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="model">Select Model:</label>
+      <select id="model">
+        <option value="">-- Select Model --</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="question">Enter your question:</label>
+      <textarea id="question" placeholder="Type your question here..."></textarea>
+    </div>
+
+    <button onclick="getAnswer()">Submit</button>
+
+    <div class="result" id="result">The answer will appear here...</div>
+  </div>
+
+  <script>
+    // 加载数据集名称到第一个下拉框
+    async function loadDatasets() {
+      const response = await fetch('http://localhost:5000/get_datasets');
+      const datasets = await response.json();
+      const datasetSelect = document.getElementById('dataset');
+      datasets.forEach(dataset => {
+        const option = document.createElement('option');
+        option.value = dataset;
+        option.textContent = dataset;
+        datasetSelect.appendChild(option);
+      });
+    }
+
+    // 根据选择的数据集加载对应的模型文件
+    async function loadModels() {
+      const dataset = document.getElementById('dataset').value;
+      const modelSelect = document.getElementById('model');
+      modelSelect.innerHTML = '<option value="">-- Select Model --</option>'; // 清空模型选项
+
+      if (dataset) {
+        const response = await fetch(`http://localhost:5000/get_models/${dataset}`);
+        const models = await response.json();
+        models.forEach(model => {
+          const option = document.createElement('option');
+          option.value = model;
+          option.textContent = model;
+          modelSelect.appendChild(option);
+        });
+      }
+    }
+
+    // 提交问题并获取答案
+    async function getAnswer() {
+      const question = document.getElementById('question').value;
+      const dataset = document.getElementById('dataset').value;
+      const model = document.getElementById('model').value;
+
+      if (!question || !dataset || !model) {
+        alert('Please complete all selections and enter a question.');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:5000/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            question: question,
+            model: `${dataset}/${model}`
+          })
+        });
+
+        const data = await response.json();
+        document.getElementById('result').textContent = data.answer || 'No answer found.';
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('result').textContent = 'An error occurred. Please try again.';
+      }
+    }
+
+    // 页面加载时调用，加载数据集下拉框
+    loadDatasets();
+  </script>
+
+</body>
+</html>
