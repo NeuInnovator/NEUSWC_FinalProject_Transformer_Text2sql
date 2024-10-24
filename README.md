@@ -6,4 +6,7 @@
 ![Wikisql Loss曲线](./assert/loss曲线.png)
 ### Wikisql 效果
 ![Wikisql 效果](./assert/图片3.png)
-### Spider Loss曲
+### Spider Loss曲线
+![Spider Loss曲线](./assert/图片4.png)
+### Spider 效果
+![Spider 效果](./assert/图片1.png)
