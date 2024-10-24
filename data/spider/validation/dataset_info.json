@@ -1,0 +1,77 @@
+{
+  "builder_name": "parquet",
+  "citation": "",
+  "config_name": "spider",
+  "dataset_name": "spider",
+  "dataset_size": 5425876,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/xlangai/spider@0c350918f3f29ec754f1181c65cdce76cd6c133c/spider/train-00000-of-00001.parquet": {
+      "num_bytes": 831359,
+      "checksum": null
+    },
+    "hf://datasets/xlangai/spider@0c350918f3f29ec754f1181c65cdce76cd6c133c/spider/validation-00000-of-00001.parquet": {
+      "num_bytes": 125887,
+      "checksum": null
+    }
+  },
+  "download_size": 957246,
+  "features": {
+    "db_id": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "query": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "question": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "query_toks": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "query_toks_no_value": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "question_toks": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 6383122,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 4743786,
+      "num_examples": 7000,
+      "dataset_name": "spider"
+    },
+    "validation": {
+      "name": "validation",
+      "num_bytes": 682090,
+      "num_examples": 1034,
+      "dataset_name": "spider"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}
